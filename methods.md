@@ -262,6 +262,19 @@ Mapping quality was evaluated using Samtools flagstat and alignment summary metr
 
 
 
+Metric                                   Minimap2        Bowtie2         BWA
+-------------------------------------------------------------------------------
+Total Reads (QC-passed)                  879,215,458     877,019,392     880,634,868
+Mapped Reads (%)                         99.45%          99.64%          99.75%
+Properly Paired (%)                      97.63%          69.69%          98.14%
+Singletons (%)                           0.27%           0.15%           0.10%
+Mate Mapped to Different Chr (%)         0.83%           1.54%           1.06%
+Mate Mapped to Diff. Chr (MAPQ >= 5) (%) 0.43%           1.06%           0.58%
+
+
+
+
+
 
 
 
