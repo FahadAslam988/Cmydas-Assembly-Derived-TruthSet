@@ -1,4 +1,4 @@
-<img width="425" height="205" alt="image" src="https://github.com/user-attachments/assets/d036b7e4-e1c2-427f-928d-726e8c7ba76c" /># Methods (Tools, Versions, Commands)
+<img width="462" height="273" alt="image" src="https://github.com/user-attachments/assets/c44881e3-f6e1-4300-ac9a-69a3bbda78d4" /><img width="425" height="205" alt="image" src="https://github.com/user-attachments/assets/d036b7e4-e1c2-427f-928d-726e8c7ba76c" /># Methods (Tools, Versions, Commands)
 
 
 ##Software and Tool Versions
@@ -292,6 +292,31 @@ Results
 
 ==============================================================================================================
 Orignal varaints after varaint calling tools 
+
+
+
+Tool         Sample      SNPs        Indels      Total_variants
+----------------------------------------------------------------
+BCF          normal      12760468    1566925     14327393
+Deepvariant  normal      15191513    2254495     17446008
+Freebayes    normal      11792036    1307234     13099270
+Gatk         normal      12749971    1904422     14654393
+Varscan      normal      12237274    1525410     13762684
+
+
+
+
+Tool         Sample      SNPs        Indels      Total_variants
+----------------------------------------------------------------
+BCF          abnormal    12801610    1578746     14380356
+Deepvariant  abnormal    15252776    2304353     17557129
+Freebayes    abnormal    11776492    1322191     13098683
+Gatk         abnormal    12774695    1919568     14694263
+Varscan      abnormal    12296877    1545381     13842258
+
+
+
+
 
 Tool          Sample      Total Variants
 -----------------------------------------
