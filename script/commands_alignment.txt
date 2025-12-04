@@ -1,7 +1,7 @@
 ################################################################################
-# STEP 3: READ ALIGNMENT (NORMAL AND ABNORMAL DATASETS)
+# STEP 3: READ ALIGNMENT (CH-NORMS1 DATASETS)
 # Species: Chelonia mydas (Green sea turtle)
-# Reference Genome: rCheMyd1.pri.v2 (Reference.fasta / Reference.mmi / Reference index)
+# Reference Genome: rCheMyd1.pri.v2 (GCA_015237465.2) convert into fasta name is  (Reference.fasta / Reference.mmi / Reference index)
 # Platform: Illumina NovaSeq 151 bp paired-end reads
 # Threads: 15–40 depending on aligner
 # Author: Fahad Aslam
@@ -17,14 +17,6 @@ THREADS=40
 # TOOL 1: BOWTIE2 ALIGNMENT
 ################################################################################
 
-# Abnormal Dataset
-/usr/bin/time -v bowtie2 \
-  -x "$REF" \
-  -1 "$TRIM/Ab-NormS2_trim/S1_1_trimmed.fastq.gz" \
-  -2 "$TRIM/Ab-NormS2_trim/S1_2_trimmed.fastq.gz" \
-  --very-sensitive-local -p 16 | \
-samtools view -@ 16 -bS - | \
-samtools sort -@ 16 -o "$ALIGN/BOWTIE2/Ab-NormS2_bowtie2_sorted.bam"
 
 # Normal Dataset
 /usr/bin/time -v bowtie2 \
@@ -36,19 +28,12 @@ samtools view -@ 16 -bS - | \
 samtools sort -@ 16 -o "$ALIGN/BOWTIE2/CH-NORMS1_bowtie2_sorted.bam"
 
 # Index BAM files (both datasets)
-/usr/bin/time -v samtools index "$ALIGN/BOWTIE2/Ab-NormS2_bowtie2_sorted.bam"
 /usr/bin/time -v samtools index "$ALIGN/BOWTIE2/CH-NORMS1_bowtie2_sorted.bam"
 
 ################################################################################
 # TOOL 2: MINIMAP2 ALIGNMENT
 ################################################################################
 
-# Abnormal Dataset
-/usr/bin/time -v minimap2 -t 40 -ax sr "$REF.mmi" \
-  "$TRIM/Ab-NormS2_trim/S1_1_trimmed.fastq.gz" \
-  "$TRIM/Ab-NormS2_trim/S1_2_trimmed.fastq.gz" \
-  | samtools view -bS - | \
-samtools sort -@ 40 -o "$ALIGN/MINIMAP2/Ab-NormS2_minimap2_sorted.bam"
 
 # Normal Dataset
 /usr/bin/time -v minimap2 -t 40 -ax sr "$REF.mmi" \
@@ -58,7 +43,6 @@ samtools sort -@ 40 -o "$ALIGN/MINIMAP2/Ab-NormS2_minimap2_sorted.bam"
 samtools sort -@ 40 -o "$ALIGN/MINIMAP2/CH-NORMS1_minimap2_sorted.bam"
 
 # Index BAM files
-/usr/bin/time -v samtools index "$ALIGN/MINIMAP2/Ab-NormS2_minimap2_sorted.bam"
 /usr/bin/time -v samtools index "$ALIGN/MINIMAP2/CH-NORMS1_minimap2_sorted.bam"
 
 ################################################################################
@@ -72,25 +56,15 @@ samtools sort -@ 40 -o "$ALIGN/MINIMAP2/CH-NORMS1_minimap2_sorted.bam"
   | samtools view -bS - | \
 samtools sort -@ 15 -o "$ALIGN/BWA/CH-NORMS1_bwa_sorted.bam"
 
-# Abnormal Dataset
-/usr/bin/time -v bwa mem -t 15 "$REF.fasta" \
-  "$TRIM/Ab-NormS2_trim/S1_1_trimmed.fastq.gz" \
-  "$TRIM/Ab-NormS2_trim/S1_2_trimmed.fastq.gz" \
-  | samtools view -bS - | \
-samtools sort -@ 15 -o "$ALIGN/BWA/Ab-NormS2_bwa_sorted.bam"
 
 # Index BAM files
 /usr/bin/time -v samtools index "$ALIGN/BWA/CH-NORMS1_bwa_sorted.bam"
-/usr/bin/time -v samtools index "$ALIGN/BWA/Ab-NormS2_bwa_sorted.bam"
 
 ################################################################################
 # POST-ALIGNMENT CHECKS
 ################################################################################
 # Collect alignment statistics
 samtools flagstat "$ALIGN/BWA/CH-NORMS1_bwa_sorted.bam" > "$ALIGN/BWA/CH-NORMS1_flagstat.txt"
-samtools flagstat "$ALIGN/BWA/Ab-NormS2_bwa_sorted.bam" > "$ALIGN/BWA/Ab-NormS2_flagstat.txt"
 samtools flagstat "$ALIGN/BOWTIE2/CH-NORMS1_bowtie2_sorted.bam" > "$ALIGN/BOWTIE2/CH-NORMS1_flagstat.txt"
-samtools flagstat "$ALIGN/BOWTIE2/Ab-NormS2_bowtie2_sorted.bam" > "$ALIGN/BOWTIE2/Ab-NormS2_flagstat.txt"
 samtools flagstat "$ALIGN/MINIMAP2/CH-NORMS1_minimap2_sorted.bam" > "$ALIGN/MINIMAP2/CH-NORMS1_flagstat.txt"
-samtools flagstat "$ALIGN/MINIMAP2/Ab-NormS2_minimap2_sorted.bam" > "$ALIGN/MINIMAP2/Ab-NormS2_flagstat.txt"
 ################################################################################
