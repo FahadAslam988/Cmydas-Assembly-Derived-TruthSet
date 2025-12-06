@@ -18,8 +18,8 @@ The complete list of tools and their versions is as follows:
 - RTG Tools v3.12.1  
 - FastQC v0.11.9  
 - MultiQC v1.15  
-- fastp v0.26.0  
-- seqkit v2.8.2
+  -fastp 0.23.4
+-  seqkit v2.8.2
 
 
 
@@ -54,7 +54,7 @@ multiqc "/media/work/New Volume1/DataofDNA/" -o "/media/work/New Volume1/DataofD
 
 
 **##Trimming**
-Five widely used read-preprocessing tools were evaluated for quality and adapter trimming of Chelonia mydas paired-end Illumina NovaSeq reads (151 bp). All runs were performed using 20 threads on a high-performance workstation (Intel Xeon, 512 GB RAM, Ubuntu 20.04 LTS).
+
 
 Tool Versions and Sources:
 ------------------------------------------------------------
