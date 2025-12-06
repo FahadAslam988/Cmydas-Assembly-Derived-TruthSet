@@ -227,7 +227,7 @@ bcftools index /home/work/Desktop/variants/denovo_try/minmap/variants_minimap2.v
 
 Alignment
 ------------------------------------------------------------
-Three mappers were evaluated for read alignment against the Chelonia mydas reference genome (rCheMyd1.pri.v2):
+Three mappers were evaluated for read alignment against the Chelonia mydas reference genome rCheMyd1.pri.v2 (GCA_015237465.2):
 1. BWA-MEM v0.7.17
 2. Bowtie2 v2.5.4
 3. Minimap2 v2.28
@@ -254,7 +254,6 @@ Mate Mapped to Diff. Chr (MAPQ >= 5) (%) 0.43%           1.06%           0.58%
 
 
 
-
 gatk MarkDuplicates \
   -I "/media/work/New Volume1/Alignment/FastpAllignment/CH-NORMS1_trimmed_sorted_rg.bam" \
   -O "/home/work/Desktop/variants/latest_tools_varains_with_reference_file/dedup_allignments/CH-NORMS1.dedup.bam" \
@@ -277,13 +276,11 @@ Interpretation:
 - Library complexity is high (large estimated library size).
 
 
-
-
 Variant Calling
 ------------------------------------------------------------
 Five variant calling tools were used to detect SNPs and indels from BWA-MEM–aligned reads:
 DeepVariant v1.9.0, GATK v4.6.2.0, FreeBayes v1.3.10, VarScan v2.4.6, and BCFtools v1.22.
-Each tool was executed on both normal and abnormal Chelonia mydas datasets using the same reference genome (rCheMyd1.pri.v2).
+Each tool was executed on both normal and abnormal Chelonia mydas datasets using the same reference genome rCheMyd1.pri.v2 (GCA_015237465.2).
 Command-line parameters for reproducibility are provided in 
 
 scripts/commands_variant_calling.txt.
@@ -295,40 +292,12 @@ Orignal varaints after varaint calling tools
 
 
 
-Tool         Sample      SNPs        Indels      Total_variants
-----------------------------------------------------------------
-BCF          normal      12760468    1566925     14327393
-Deepvariant  normal      15191513    2254495     17446008
-Freebayes    normal      11792036    1307234     13099270
-Gatk         normal      12749971    1904422     14654393
-Varscan      normal      12237274    1525410     13762684
-
-
-
-
-Tool         Sample      SNPs        Indels      Total_variants
-----------------------------------------------------------------
-BCF          abnormal    12801610    1578746     14380356
-Deepvariant  abnormal    15252776    2304353     17557129
-Freebayes    abnormal    11776492    1322191     13098683
-Gatk         abnormal    12774695    1919568     14694263
-Varscan      abnormal    12296877    1545381     13842258
-
-
-
-
-
 Tool          Sample      Total Variants
 -----------------------------------------
-BCFtools      Abnormal    14,380,356
 BCFtools      Normal      14,327,393
-DeepVariant   Abnormal    17,536,252
 DeepVariant   Normal      17,425,142
-FreeBayes     Abnormal    13,935,733
 FreeBayes     Normal      13,910,723
-GATK          Abnormal    14,671,962
 GATK          Normal      14,632,668
-VarScan       Abnormal    13,842,258
 VarScan       Normal      13,762,684
 
 
@@ -359,15 +328,10 @@ https://github.com/Wasiq54/Chelonia-mydas-variant-benchmark/blob/main/scripts/fi
 
 Tool          Sample      Total Variants
 -----------------------------------------
-BCFtools      Abnormal    14,285,440
 BCFtools      Normal      14,220,913
-DeepVariant   Abnormal    13,767,503
 DeepVariant   Normal      13,705,037
-FreeBayes     Abnormal    13,332,001
 FreeBayes     Normal      13,239,802
-GATK          Abnormal    14,522,966
 GATK          Normal      14,467,559
-VarScan       Abnormal    13,833,482
 VarScan       Normal      13,753,976
 -----------------------------------------------------------------------------        ** SNPS files **---------------------------------
 Command-line parameters for reproducibility are provided in 
@@ -376,35 +340,44 @@ Command-line parameters for reproducibility are provided in
 
 File                     SNP_File_Count
 ----------------------------------------
-BCF_abnormal             12726145
 BCF_normal               12678209
-Deepvariant_abnormal     12103451
 Deepvariant_normal       12058893
-Freebayes_abnormal       11300566
 Freebayes_normal         11247911
-Gatk_abnormal            12663916
 Gatk_normal              12629773
-Varscan_abnormal         12288474
 Varscan_normal           12228987
 
+                                  Evalution using RTG
+
+     commands 
+     /script/RTG.txt
 
 
------------------------------------------------------------------------------        ** Indels files **---------------------------------
-Command-line parameters for reproducibility are provided in 
-(https://github.com/Wasiq54/Chelonia-mydas-variant-benchmark/blob/main/scripts/make_indels.sh)
 
-File                     INDEL_File_Count
-------------------------------------------
-BCF_abnormal             1559295
-BCF_normal               1542704
-Deepvariant_abnormal     1684651
-Deepvariant_normal       1666433
-Freebayes_abnormal       1276508
-Freebayes_normal         1254311
-Gatk_abnormal            1880614
-Gatk_normal              1858658
-Varscan_abnormal         1545008
-Varscan_normal           1524989
+
+     (A) Unfiltered performance (Threshold = None)
+
+These rows correspond to “use all variants as they are in the VCF” (no score cutoff).
+| Tool        | TP (baseline) | TP (call) | FP        | FN        | Precision  | Sensitivity | F1         |
+| ----------- | ------------- | --------- | --------- | --------- | ---------- | ----------- | ---------- |
+| VarScan     | 5,088,509     | 5,088,505 | 7,140,482 | 3,079,542 | 0.4161     | 0.6230      | 0.4989     |
+| GATK        | 5,068,348     | 5,068,342 | 7,561,404 | 3,099,703 | 0.4013     | 0.6205      | 0.4874     |
+| FreeBayes   | 4,465,838     | 4,456,957 | 6,589,960 | 3,702,213 | 0.4035     | 0.5467      | 0.4643     |
+| BCFtools    | 5,125,613     | 5,125,609 | 7,552,600 | 3,042,438 | 0.4043     | 0.6275      | 0.4918     |
+| DeepVariant | 5,081,165     | 5,081,160 | 6,975,659 | 3,086,886 | **0.4214** | 0.6221      | **0.5025** |
+
+
+(B) Best-score point (vcfeval “Threshold” row)
+| Tool        | Threshold | TP (baseline) | TP (call) | FP        | FN        | Precision  | Sensitivity | F1         |
+| ----------- | --------- | ------------- | --------- | --------- | --------- | ---------- | ----------- | ---------- |
+| VarScan     | None      | 5,088,509     | 5,088,505 | 7,140,482 | 3,079,542 | 0.4161     | 0.6230      | 0.4989     |
+| GATK        | 1402.060  | 4,169,967     | 4,169,967 | 545,323   | 3,998,084 | 0.8844     | 0.5105      | 0.6473     |
+| FreeBayes   | 1026.160  | 3,758,225     | 3,750,978 | 448,749   | 4,409,826 | 0.8931     | 0.4601      | 0.6073     |
+| BCFtools    | 222.417   | 4,403,711     | 4,403,711 | 268,293   | 3,764,340 | **0.9426** | **0.5391**  | **0.6859** |
+| DeepVariant | 39.100    | 3,672,379     | 3,672,379 | 497,597   | 4,495,672 | 0.8807     | 0.4496      | 0.5953     |
+
+
+
+
 
 ==================================================inter Tools concordance -----==============================
 step1: make bed fils for snps and indels
@@ -443,89 +416,6 @@ Freebayes_normal_SNPs        Varscan_normal_SNPs              10648860
 Gatk_normal_SNPs             Varscan_normal_SNPs              11916478
 
 
----------------------------------------------------- abnormal SNPs overlap------------------------------------------------
-
-BCF_abnormal_SNPs.bed
-Deepvariant_abnormal_SNPs.bed
-Freebayes_abnormal_SNPs.bed
-Gatk_abnormal_SNPs.bed
-Varscan_abnormal_SNPs
-
-Command
-https://github.com/Wasiq54/Chelonia-mydas-variant-benchmark/blob/main/scripts/abnormal_snp_overlap.sh
-
-
-
-
-ToolA                         ToolB                           Overlap
-----------------------------------------------------------------------------
-BCF_abnormal_SNPs            Deepvariant_abnormal_SNPs        11982196
-BCF_abnormal_SNPs            Freebayes_abnormal_SNPs          11026629
-BCF_abnormal_SNPs            Gatk_abnormal_SNPs               12282731
-BCF_abnormal_SNPs            Varscan_abnormal_SNPs            12153920
-Deepvariant_abnormal_SNPs    Freebayes_abnormal_SNPs          10607920
-Deepvariant_abnormal_SNPs    Gatk_abnormal_SNPs               11849848
-Deepvariant_abnormal_SNPs    Varscan_abnormal_SNPs            11744062
-Freebayes_abnormal_SNPs      Gatk_abnormal_SNPs               10894738
-Freebayes_abnormal_SNPs      Varscan_abnormal_SNPs            10688109
-Gatk_abnormal_SNPs           Varscan_abnormal_SNPs            11959187
-
-
----------------------------------------------------- normal Indel overlap------------------------------------------------
-
-BCF_normal_INDELs.bed
-Deepvariant_normal_INDELs.bed
-Freebayes_normal_INDELs.bed
-Gatk_normal_INDELs.bed
-Varscan_normal_INDELs.bed
-
-
-
-Command
-https://github.com/Wasiq54/Chelonia-mydas-variant-benchmark/blob/main/scripts/normal_indel_overlap.sh
-
-
-ToolA                         ToolB                           Overlap
----------------------------------------------------------------------------
-BCF_normal_INDELs            Deepvariant_normal_INDELs        1496337
-BCF_normal_INDELs            Freebayes_normal_INDELs          1247269
-BCF_normal_INDELs            Gatk_normal_INDELs               1500247
-BCF_normal_INDELs            Varscan_normal_INDELs            1448813
-Deepvariant_normal_INDELs    Freebayes_normal_INDELs          1254057
-Deepvariant_normal_INDELs    Gatk_normal_INDELs               1608289
-Deepvariant_normal_INDELs    Varscan_normal_INDELs            1484214
-Freebayes_normal_INDELs      Gatk_normal_INDELs               1220823
-Freebayes_normal_INDELs      Varscan_normal_INDELs            1189766
-Gatk_normal_INDELs           Varscan_normal_INDELs            1512186
-
-
-
-
----------------------------------------------------- abnormal indel overlap------------------------------------------------
-BCF_abnormal_INDELs.bed
-Deepvariant_abnormal_INDELs.bed
-Freebayes_abnormal_INDELs.bed
-Gatk_abnormal_INDELs.bed
-Varscan_abnormal_INDELs.bed
-
-
-
-Command
-https://github.com/Wasiq54/Chelonia-mydas-variant-benchmark/blob/main/scripts/abnormal_indel_overlap.sh
-
-
-ToolA                          ToolB                            Overlap
-----------------------------------------------------------------------------
-BCF_abnormal_INDELs           Deepvariant_abnormal_INDELs       1513275
-BCF_abnormal_INDELs           Freebayes_abnormal_INDELs         1269730
-BCF_abnormal_INDELs           Gatk_abnormal_INDELs              1518467
-BCF_abnormal_INDELs           Varscan_abnormal_INDELs           1467759
-Deepvariant_abnormal_INDELs   Freebayes_abnormal_INDELs         1275264
-Deepvariant_abnormal_INDELs   Gatk_abnormal_INDELs              1629128
-Deepvariant_abnormal_INDELs   Varscan_abnormal_INDELs           1502048
-Freebayes_abnormal_INDELs     Gatk_abnormal_INDELs              1239822
-Freebayes_abnormal_INDELs     Varscan_abnormal_INDELs           1207299
-Gatk_abnormal_INDELs          Varscan_abnormal_INDELs           1531127
 
 
 ----------------------------------------------------------------------------------------------------------Jaccard similarity Normal SNPs
@@ -536,125 +426,6 @@ command
 
 https://github.com/Wasiq54/Chelonia-mydas-variant-benchmark/blob/main/scripts/normal_snp_jaccard.sh
 
-----------------------------------------------------------------------------------------------------------Jaccard similarity abnormal SNPs
-In the abnormal dataset, SNP-level Jaccard similarities followed a pattern similar to the normal sample. DeepVariant, GATK, BCFtools and VarScan again demonstrated strong mutual overlap, whereas FreeBayes maintained moderate similarity values. The abnormal sample displayed slightly reduced inter-caller similarity compared to the normal dataset, likely reflecting biological differences or coverage variation, but overall SNP concordance remained high
-
-command
-
-https://github.com/Wasiq54/Chelonia-mydas-variant-benchmark/blob/main/scripts/abnormal_snp_jaccard.sh
-
-----------------------------------------------------------------------------------------------------------Jaccard similarity Normal Indel
-Jaccard similarity for INDELs in the normal dataset was lower than for SNPs, consistent with known challenges in INDEL calling. DeepVariant and GATK shared the highest INDEL concordance, followed by BCFtools and VarScan, whereas FreeBayes showed the lowest similarity with the other callers. These patterns align with previously reported INDEL-calling inconsistencies across tools.
-
-command 
-https://github.com/Wasiq54/Chelonia-mydas-variant-benchmark/blob/main/scripts/normal_indel_jaccard.sh
-
-
-----------------------------------------------------------------------------------------------------------Jaccard similarity abnormal Indel
-
-The abnormal dataset exhibited similar INDEL concordance patterns to the normal dataset, with DeepVariant and GATK forming the most consistent pair. Overall Jaccard values for INDELs were modest, reflecting typical inter-caller variability for small insertions and deletions. FreeBayes again showed weaker similarity to the remaining tools, while BCFtools and VarScan showed intermediate concordance.
-
-command
-https://github.com/Wasiq54/Chelonia-mydas-variant-benchmark/blob/main/scripts/abnormal_indel_jaccard.sh
-
-
----------------------------------------------------- For Venn SNP diagram------------------------------------------------
-Venn diagrams were generated to compare the overlap of SNP calls among the five variant calling tools (DeepVariant, GATK, FreeBayes, VarScan, and BCFtools). SNPs were extracted from each filtered VCF using bcftools view, and unique variant identifiers (CHROM:POS:REF:ALT) were obtained using bcftools query. These variant sets were then imported into R, and multi-set Venn diagrams were constructed using the ggVennDiagram package to visualize shared and unique variants across tools
-command 
-https://github.com/Wasiq54/Chelonia-mydas-variant-benchmark/blob/main/venn_analysis/venn_plot_abnormal.R
-https://github.com/Wasiq54/Chelonia-mydas-variant-benchmark/blob/main/venn_analysis/venn_plot_abnormal.R
 
 
 
-
-                                  Evalution using RTG
-
-     commands 
-     /script/RTG.txt
-
-
-
-
-     (A) Unfiltered performance (Threshold = None)
-
-These rows correspond to “use all variants as they are in the VCF” (no score cutoff).
-| Tool        | TP (baseline) | TP (call) | FP        | FN        | Precision  | Sensitivity | F1         |
-| ----------- | ------------- | --------- | --------- | --------- | ---------- | ----------- | ---------- |
-| VarScan     | 5,088,509     | 5,088,505 | 7,140,482 | 3,079,542 | 0.4161     | 0.6230      | 0.4989     |
-| GATK        | 5,068,348     | 5,068,342 | 7,561,404 | 3,099,703 | 0.4013     | 0.6205      | 0.4874     |
-| FreeBayes   | 4,465,838     | 4,456,957 | 6,589,960 | 3,702,213 | 0.4035     | 0.5467      | 0.4643     |
-| BCFtools    | 5,125,613     | 5,125,609 | 7,552,600 | 3,042,438 | 0.4043     | 0.6275      | 0.4918     |
-| DeepVariant | 5,081,165     | 5,081,160 | 6,975,659 | 3,086,886 | **0.4214** | 0.6221      | **0.5025** |
-
-
-(B) Best-score point (vcfeval “Threshold” row)
-| Tool        | Threshold | TP (baseline) | TP (call) | FP        | FN        | Precision  | Sensitivity | F1         |
-| ----------- | --------- | ------------- | --------- | --------- | --------- | ---------- | ----------- | ---------- |
-| VarScan     | None      | 5,088,509     | 5,088,505 | 7,140,482 | 3,079,542 | 0.4161     | 0.6230      | 0.4989     |
-| GATK        | 1402.060  | 4,169,967     | 4,169,967 | 545,323   | 3,998,084 | 0.8844     | 0.5105      | 0.6473     |
-| FreeBayes   | 1026.160  | 3,758,225     | 3,750,978 | 448,749   | 4,409,826 | 0.8931     | 0.4601      | 0.6073     |
-| BCFtools    | 222.417   | 4,403,711     | 4,403,711 | 268,293   | 3,764,340 | **0.9426** | **0.5391**  | **0.6859** |
-| DeepVariant | 39.100    | 3,672,379     | 3,672,379 | 497,597   | 4,495,672 | 0.8807     | 0.4496      | 0.5953     |
-
-
-
-
-
-
-
-
-### Venn Diagram Visualization of Variant Callers
-
-To assess concordance among the five variant callers (DeepVariant, GATK, FreeBayes, VarScan, and BCFtools), SNP positions were extracted from normalized and sorted VCF files using **bcftools** and compared visually through 5-way Venn diagrams.  
-
-The pipeline involved:
-1. Normalization and indexing of VCFs using `bcftools norm`, `bcftools sort`, and `bcftools index`.
-2. Extraction of SNP coordinates (`CHROM:POS`) from each caller using `bcftools query`.
-3. Visualization of overlapping SNPs using the **ggVennDiagram** (R v1.3.2) package.
-
-Scripts for complete reproducibility are available in the `venn_analysis/` directory:
-- `venn_pipeline.sh` — generates normalized SNP coordinate files.  
-- `venn_plot_normal.R` — visualizes overlap for the normal dataset.  
-- `venn_plot_abnormal.R` — visualizes overlap for the abnormal dataset.  
-
-The resulting figures (`FiveTool_Venn_Normal.png` and `FiveTool_Venn_Abnormal.png`) illustrate shared and unique variant calls among the tools for each dataset.
-
-
-### Discordance Analysis (Missed and Unique Variants)
-
-To evaluate discordance among variant callers, a Python-based script was developed to identify **missed** and **unique** SNPs across the five tools (DeepVariant, GATK, FreeBayes, VarScan, and BCFtools).  
-The analysis used the SNP coordinate text files generated during the Venn diagram pipeline (`*_SNPs.txt`) for both normal and abnormal datasets.
-
-**Workflow Summary**
-1. Each SNP coordinate (`CHROM:POS`) was loaded from the tool-specific SNP files.
-2. A combined union of all SNPs was generated.
-3. For each caller:
-   - **Missed SNPs** were defined as variants detected by all other tools but absent in the current one.  
-   - **Unique SNPs** were defined as variants detected exclusively by that tool.
-4. Counts of missed and unique SNPs were summarized per caller.
-
-The script (`discordance_analysis.py`) is located in the `venn_analysis/` directory and can be executed as:
-```bash
-python venn_analysis/discordance_analysis.py
-
-
-
-
-
-
-## Consensus Truth Set & Benchmarking
-
-High-confidence variant truth sets were generated by intersecting five callers (DeepVariant, GATK, FreeBayes, VarScan, BCFtools) for normal (CH-NORMS1) and abnormal (Ab-NormS2) datasets.  
-
-**Steps:**
-1. Sort, index, and normalize VCFs using bcftools.
-2. Create intersections (3+, 4+, 5+) with bcftools isec.
-3. Filter caller VCFs to consensus loci using bcftools view -R.
-4. Generate RTG reference SDF:
-   rtg format -o reference.sdf <reference.fasta>
-5. Benchmark each caller using RTG vcfeval:
-   rtg vcfeval -b <truth.vcf.gz> -c <caller.vcf.gz> -t reference.sdf -o <out_dir> --vcf-score-field QUAL
-
-All full commands are available in:
-
-scripts/commands_consensus_truthset.txt
