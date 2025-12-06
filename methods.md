@@ -22,8 +22,6 @@ The complete list of tools and their versions is as follows:
 -  seqkit v2.8.2
 
 
-
-
 - soapdenovo2 2.40                             
 ABySS version 2.3.6
  MEGAHIT v1.2.9
@@ -60,48 +58,28 @@ multiqc "/media/work/New Volume1/DataofDNA/" -o "/media/work/New Volume1/DataofD
 Tool Versions and Sources:
 ------------------------------------------------------------
 
-fastp v0.23.4 — OpenGene GitHub
-command 
- /usr/bin/time -v fastp \
-  -i W1-A_1.fastq.gz \
-  -I W1-A_2.fastq.gz \
-  -o W1-A_1_trimmed.fastq.gz \
-  -O W1-A_2_trimmed.fastq.gz \
-  --thread 16 \
-  --html fastp_report.html \
-  --json fastp_report.json \
-  2> fastp_runtime.txt
-
-
-------------------------------------------------------------
 
 Workflow and Rationale
- fastp (v0.23.4) demonstrated the best overall balance of speed, accuracy, and comprehensive reporting. Therefore, fastp-trimmed reads were selected for all downstream analyses, including alignment, variant calling, and benchmarking.
-
-The exact shell commands and parameters for each tool are provided in:
+ fastp (v0.23.4) 
 
 scripts/commands_trimming_all_tools.txt
 
 Quality improvements were confirmed using FastQC (v0.11.9) and summarized with MultiQC (v1.15) after trimming.
 
-
-
-               Trimmed Sequencing Data Summary (Normal CH-NORMS1)
-
-               | Dataset            | File            | Encoding     | Total Sequences | Poor-quality reads | Read length | %GC |
-| ------------------ | --------------- | ------------ | --------------: | -----------------: | ----------: | --: |
-| Normal (CH-NORMS1) | W1-A_1.fastq.gz | Illumina 1.9 |     456,923,725 |                  0 |      151 bp |  44 |
-| Normal (CH-NORMS1) | W1-A_2.fastq.gz | Illumina 1.9 |     456,923,725 |                  0 |      151 bp |  45 |
-
+After Trimming these are Result
+====================================================
+ | Dataset              | File                     | Encoding         | Total Sequences | Total Bases | Read length | %GC | Poor-quality reads |
+  | -------------------- | ------------------------ | ---------------- | ---------------: | -----------: | -----------: | ---:| ------------------: |
+| Normal (CH-NORMS1)   | W1-A_1_trimmed.fastq.gz | Illumina 1.9     |     438,509,696 |      66 Gbp |   15–151 bp |  44 |                   0 |
+| Normal (CH-NORMS1)   | W1-A_2_trimmed.fastq.gz | Illumina 1.9     |     438,509,696 |      66 Gbp |   15–151 bp |  44 |                   0 |
 
 
 
-
-
-==============================================================================ABySS version 2.3.6     (abyss_env)
+--------------------------------------Start Making Truthset for validation --------------------------
+==============================================================================ABySS version 2.3.6   (abyss_env)
 cd /home/work/Desktop/variants/denovo_try/Abyss/Normal/ && \
 abyss-pe k=96 name=W1-A lib=pe \
-pe="/home/work/Desktop/variants/DataofDNA/CH-NORMS1/W1-A_1.fastq.gz /home/work/Desktop/variants/DataofDNA/CH-NORMS1/W1-A_2.fastq.gz" \
+pe="/home/work/Desktop/variants/DataofDNA/CH-NORMS1/W1-A_1_trimmed.fastq.gz /home/work/Desktop/variants/DataofDNA/CH-NORMS1/W1-A_2_trimmed.fastq.gz" \
 j=10 B=600G
 
 
@@ -116,9 +94,6 @@ step 1
 
 =================
 soap_config.txt
-
-
-
 max_rd_len=151
 
 [LIB]
@@ -126,8 +101,8 @@ avg_ins=350
 reverse_seq=0
 asm_flags=3
 rank=1
-q1=/home/work/Desktop/variants/DataofDNA/CH-NORMS1/W1-A_1.fastq
-q2=/home/work/Desktop/variants/DataofDNA/CH-NORMS1/W1-A_2.fastq
+q1=/home/work/Desktop/variants/DataofDNA/CH-NORMS1/W1-A_1_trimmed.fastq.gz
+q2=/home/work/Desktop/variants/DataofDNA/CH-NORMS1/W1-A_2_trimmed.fastq.gz
 
 
 =====================
@@ -143,8 +118,6 @@ SOAPdenovo-63mer all \
   -o W1-A-soap \
   -p 30 \
   -a 450
-
-
 
 ============================================================================
 
@@ -247,14 +220,7 @@ bcftools index /home/work/Desktop/variants/denovo_try/minmap/variants_minimap2.v
 
 
 
-
-
-========================== mummer4-4.0.0rc1  ===================
-
-nucmer --prefix=/home/work/Desktop/variants/denovo_try/mumer4/abyss_vs_ref \
-  /home/work/Desktop/variants/denovo_try/Reference/Reference.fasta \
-  /home/work/Desktop/variants/denovo_try/Abyss/Normal/W1-A-contigs.fa
-
+--------------------------------------End Making Truthset for validation --------------------------
 
 
 ## Alignment 
@@ -309,7 +275,6 @@ ESTIMATED_LIBRARY_SIZE: 2,612,848,101
 Interpretation:
 - Duplication rate is low (under 10%), which is good for downstream variant calling.
 - Library complexity is high (large estimated library size).
-
 
 
 
