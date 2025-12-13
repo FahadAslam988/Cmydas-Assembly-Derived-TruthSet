@@ -1,38 +1,18 @@
 
-### Benchmarking DeepVariant and Conventional Variant Callers Using an Assembly-Derived Truth Set for the *Chelonia mydas* Genome
+### Evaluating DeepVariant and Conventional SNP Callers in the Chelonia mydas Genome Using an Assembly-Derived Truth Set 
 
 ---
 
 ##  Overview
 
 ##  This repository contains all scripts and workflow files used to reproduce the analyses presented in the manuscript:
-“Benchmarking DeepVariant and Conventional Variant Callers Using an Assembly-Derived Truth Set for the Chelonia mydas Genome.”
+“Evaluating DeepVariant and Conventional SNP Callers in the Chelonia mydas Genome Using an Assembly-Derived Truth Set .”
 
 The study evaluates the performance of five short-variant callers on *Chelonia mydas* whole-genome sequencing data using a polished, assembly-derived SNP truth set. All pipelines for assembly generation, polishing, alignment, variant calling, filtering, and benchmarking are included.
 
 ---
 
-## Repository Structure
 
-```
-Cmydas-Assembly-Derived-TruthSet/
-│
-├── script/                      # Scripts and pipelines used in the paper
-│   ├── commands_alignment.txt
-│   ├── commands_variant_calling.txt
-│   ├── commands_trimming_all_tools.txt
-│   ├── commands_consensus_truthset.txt
-│   ├── make_snps.sh
-│   ├── filter_all_tools.sh
-│   ├── normal_snp_jaccard.sh            # (Not used in paper)
-│   ├── normal_snp_overlap.sh            # (Not used in paper)
-│   ├── polca.txt
-│   └── other scripts
-│
-├── methods.md                 # Detailed methodology used in the manuscript
-├── data_summary.md            # Final BUSCO, QUAST, ANI, and alignment results
-├── LICENSE
-└── README.md
 ```
 
 
@@ -116,7 +96,7 @@ Raw FASTQ files, ABySS assemblies, POLCA-corrected assemblies, and BAM alignment
 
 ## 👤 Author
 
-Fahad Aslam / Wasiq Aslam
+Fahad Aslam 
 GitHub: [https://github.com/FahadAslam988](https://github.com/FahadAslam988)
 
 ---
@@ -126,4 +106,3 @@ GitHub: [https://github.com/FahadAslam988](https://github.com/FahadAslam988)
 Licensed under the MIT License.
 
 
-Just tell me!
