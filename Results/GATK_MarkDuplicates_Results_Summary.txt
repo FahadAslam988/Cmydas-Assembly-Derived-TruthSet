@@ -1,4 +1,11 @@
-  GATK MarkDuplicates Results Summary
+gatk MarkDuplicates \
+  -I "CH-NORMS1_trimmed_sorted_rg.bam" \
+  -O "dedup_allignments/CH-NORMS1.dedup.bam" \
+  -M "CH-NORMS1.metrics.txt" \
+  --CREATE_INDEX true
+
+
+GATK MarkDuplicates Results Summary
 ====================================
 
 Sample: CH-NORMS1)
