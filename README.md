@@ -17,6 +17,9 @@ The workflow integrates read preprocessing, de novo genome assembly, assembly qu
 * Provide a **reproducible pipeline** for variant benchmarking in non-model organisms
 
 ---
+<img width="2600" height="1200" alt="Consensus Truth Set (Common Variants )" src="https://github.com/user-attachments/assets/13059052-cb76-41bd-8a9e-92088b91cd2d" />
+-----------------------------------------------------------------------------------------------------------------------------------------------------------
+<img width="2600" height="1200" alt="Consensus Truth Set (Common Variants ) (1)" src="https://github.com/user-attachments/assets/bf0e44a1-65d4-436a-89b7-69faa7e6834a" />
 
 ## 📂 Repository Structure
 
