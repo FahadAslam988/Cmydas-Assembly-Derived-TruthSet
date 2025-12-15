@@ -1,0 +1,14 @@
+  GATK MarkDuplicates Results Summary
+====================================
+
+Sample: CH-NORMS1)
+--------------------------
+READ_PAIRS_EXAMINED: 436,970,646
+READ_PAIR_DUPLICATES: 37,780,610
+READ_PAIR_OPTICAL_DUPLICATES: 3,774,873 (~10% of duplicate pairs)
+PERCENT_DUPLICATION: 8.67%
+ESTIMATED_LIBRARY_SIZE: 2,612,848,101
+
+Interpretation:
+- Duplication rate is low (under 10%), which is good for downstream variant calling.
+- Library complexity is high (large estimated library size).
