@@ -28,13 +28,11 @@ ABySS version 2.3.6
 
 
 
-# ✅  Statement (Normal Dataset Only)**
-
-The raw paired-end Illumina NovaSeq 6000 reads for the *Chelonia mydas* normal sample (CH-NORMS1) were obtained from Macrogen Singapore using the TruSeq Nano DNA library preparation kit (151 bp, paired-end). Quality assessment using FastQC (v0.11.9) and MultiQC (v1.15) showed no poor-quality reads, uniform base quality across read positions, and a GC content of approximately 44%. These results confirm that the sequencing data are of high quality and suitable for downstream genome mapping and variant detection analyses.
+The raw paired-end Illumina NovaSeq 6000 reads for the *Chelonia mydas* normal sample (CH-NORMS1) were obtained from Macrogen Singapore using the TruSeq Nano DNA library preparation kit (151 bp, paired-end). Quality assessment using FastQC (v0.11.9) showed no poor-quality reads, uniform base quality across read positions, and a GC content of approximately 44%. These results confirm that the sequencing data are of high quality and suitable for downstream genome mapping and variant detection analyses.
 
 ---
 
-# ✅ **Sequencing Data Summary (Normal Sample Only)**
+# ✅ **Sequencing Data Summary**
 
 | Dataset            | File            | Encoding     | Total Sequences | Total Bases | Read length | %GC | Poor-quality reads |
 | ------------------ | --------------- | ------------ | --------------: | ----------: | ----------: | --: | -----------------: |
@@ -46,10 +44,6 @@ The raw paired-end Illumina NovaSeq 6000 reads for the *Chelonia mydas* normal s
 
 ## QC
 fastqc --threads 16 W1-A_1.fastq.gz W1-A_2.fastq.gz -o CH-NORMS1/FastqcReport
-multiqc "/media/work/New Volume1/DataofDNA/" -o "/media/work/New Volume1/DataofDNA/summary/"
-
-
-
 
 
 **##Trimming**
@@ -62,7 +56,7 @@ Tool Versions and Sources:
 Workflow and Rationale
  fastp (v0.23.4) 
 
-scripts/commands_trimming_all_tools.txt
+scripts/commands_trimming.txt
 
 Quality improvements were confirmed using FastQC (v0.11.9) and summarized with MultiQC (v1.15) after trimming.
 
@@ -75,208 +69,22 @@ After Trimming these are Result
 
 
 
---------------------------------------Start Making Truthset for validation --------------------------
-==============================================================================ABySS version 2.3.6   (abyss_env)
-cd /home/work/Desktop/variants/denovo_try/Abyss/Normal/ && \
-abyss-pe k=96 name=W1-A lib=pe \
-pe="/home/work/Desktop/variants/DataofDNA/CH-NORMS1/W1-A_1_trimmed.fastq.gz /home/work/Desktop/variants/DataofDNA/CH-NORMS1/W1-A_2_trimmed.fastq.gz" \
-j=10 B=600G
+--------------------------------------Denovo--------------------------
+1-Abyss
+2-Magahit
+3-soapdenvo
 
+commands :
+script/Denovo_and_Trth_set_Steps_and_Commands.txt
 
-===================================================- soapdenovo2 2.40                             
+Busco and AnI check wtith referce base file (NCBI)
 
-
-soapdenovo2 2.40                                     (soapdenovo2_env)
-
-Normal
-
-step 1
-
-=================
-soap_config.txt
-max_rd_len=151
-
-[LIB]
-avg_ins=350
-reverse_seq=0
-asm_flags=3
-rank=1
-q1=/home/work/Desktop/variants/DataofDNA/CH-NORMS1/W1-A_1_trimmed.fastq.gz
-q2=/home/work/Desktop/variants/DataofDNA/CH-NORMS1/W1-A_2_trimmed.fastq.gz
-
-
-=====================
+Quast report result in Results/Busco_and_ANI_Results.txt
+Results/QUAST_report.pdf
 
 
 
-
-cd /home/work/Desktop/variants/denovo_try/soapdenovo2/
-
-SOAPdenovo-63mer all \
-  -s soap_config.txt \
-  -K 63 \
-  -o W1-A-soap \
-  -p 30 \
-  -a 450
-
-============================================================================
-
-(soapdenovo2_env) work@work-Precision-7920-Tower:~/Desktop/variants/denovo_try/soapdenovo2$ SOAPdenovo-63mer all   -s soap_config.txt   -K 63   -o W1-A-soap   -p 30   -a 450
-
-============================================================================ MEGAHIT v1.2.9
-megahit \
-  -1 /media/beeu/DATA/fahad/TrimData/CH-NORMS1_trim/W1-A_1_trimmed.fastq.gz \
-  -2 /media/beeu/DATA/fahad/TrimData/CH-NORMS1_trim/W1-A_2_trimmed.fastq.gz \
-  -o /media/beeu/DATA/fahad/Denovo/Megahit_Normal \
-  --min-count 2 \
-  --k-min 21 \
-  --k-max 141 \
-  --k-step 12 \
-  -t 40
-
-  ==============================================================================busco
-
-busco \
--i /home/work/Desktop/variants/denovo_try/Abyss/Normal/W1-A-scaffolds.fa \
--o W1A_busco_results \
--m genome \
--l sauropsida_odb10 \
--c 16 \
---out_path /home/work/Desktop/variants/BUSCO/
-
-
-
-# ================================
-# BUSCO COMMAND — SOAPdenovo NORMAL
-# ================================
-/home/work/miniconda3/envs/basco_env/bin/busco \
-  -i /home/work/Desktop/variants/denovo_try/all_assembly_files/soapdenovo_normal/W1-A-soap.scafSeq \
-  -o soapdenovo_normal_W1-A-soap_busco_results \
-  -m genome \
-  -l sauropsida_odb10 \
-  -c 16 \
-  --out_path /home/work/Desktop/variants/denovo_try/all_assembly_files \
-  --download_path /home/work/busco_downloads \
-  --offline
-
-
-# ================================
-# BUSCO COMMAND — ABySS NORMAL
-# ================================
-/home/work/miniconda3/envs/basco_env/bin/busco \
-  -i /home/work/Desktop/variants/denovo_try/all_assembly_files/abyss_normal/W1-A-scaffolds.fa \
-  -o abyss_normal_W1-A-scaffolds_busco_results \
-  -m genome \
-  -l sauropsida_odb10 \
-  -c 16 \
-  --out_path /home/work/Desktop/variants/denovo_try/all_assembly_files \
-  --download_path /home/work/busco_downloads \
-  --offline
-
-
-# ================================
-# BUSCO COMMAND — REFERENCE NCBI (rCheMyd1.pri.v2)
-# ================================
-/home/work/miniconda3/envs/basco_env/bin/busco \
-  -i /home/work/Desktop/variants/denovo_try/all_assembly_files/Reference_ncbi/Reference.fasta \
-  -o Reference_ncbi_Reference_busco_results \
-  -m genome \
-  -l sauropsida_odb10 \
-  -c 16 \
-  --out_path /home/work/Desktop/variants/denovo_try/all_assembly_files \
-  --download_path /home/work/busco_downloads \
-  --offline
-# BUSCO COMMAND — magahit_normal_final
-/home/work/miniconda3/envs/basco_env/bin/busco \
-  -i /home/work/Desktop/variants/denovo_try/all_assembly_files/magahit_normal/final.contigs.fa \
-  -o magahit_normal_final.contigs_busco_results \
-  -m genome \
-  -l sauropsida_odb10 \
-  -c 16 \
-  --out_path /home/work/Desktop/variants/denovo_try/all_assembly_files \
-  --download_path /home/work/busco_downloads \
-  --offline
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  =================================================================Busco Results ==================
-| Sample (output folder)                           |       C% |   S% |  D% |   F% |   M% |    n |
-| ------------------------------------------------ | -------: | ---: | --: | ---: | ---: | ---: |
-| Reference\_ncbi\_Reference\_busco\_results       | **99.6** | 98.9 | 0.7 |  0.1 |  0.3 | 7480 |
-| abyss\_normal\_W1-A-scaffolds\_busco\_results    | **67.6** | 66.6 | 1.0 | 21.8 | 10.6 | 7480 |
-| **polca\_W1-A-scaffolds\_busco\_results**        | **67.6** | 66.6 | 1.0 | 21.8 | 10.6 | 7480 |
-| soapdenovo\_normal\_W1-A-soap\_busco\_results    |     59.1 | 58.7 | 0.4 | 25.2 | 15.7 | 7480 |
-| magahit\_normal\_final.contigs\_busco\_results   |     56.5 | 56.0 | 0.5 | 28.2 | 15.4 | 7480 |
-
-========================Busco restuls with ANI====
-| Assembly Tool / Run      | BUSCO C% |   F% |   M% |   ANI (%) | Align Fraction (Ref) | Align Fraction (Query) | Interpretation                      |
-| ------------------------ | -------: | ---: | ---: | --------: | -------------------: | ---------------------: | ----------------------------------- |
-| **Reference\_ncbi**      |     99.6 |  0.1 |  0.3 |    100.00 |              100.00% |                100.00% | 🏆 Perfect reference                |
-| **ABySS (Normal)**       |     67.6 | 21.8 | 10.6 | **99.45** |           **89.48%** |             **84.86%** | ✅ Best similarity overall           |
-| **ABySS + Polca polish** |     67.6 | 21.8 | 10.6 | \~99.45\* |           \~89.48%\* |             \~84.86%\* | ➖ No BUSCO change (likely same ANI) |
-| MEGAHIT (Normal)         |     56.5 | 28.2 | 15.4 |     99.40 |               87.91% |                 85.36% | 🟢 Very good                        |
-| SOAPdenovo2 (Normal)     |     59.1 | 25.2 | 15.7 |     99.03 |               78.14% |                 72.21% | 🔴 Lowest similarity                |
-
-
-
-======================================Quest Version: 5.3.0 report of megahit ,soapdenov and abyss========
-
-All statistics are based on contigs of size >= 500 bp, unless otherwise noted (e.g., "# contigs (>= 0 bp)" and "Total length (>= 0 bp)" include all contigs).
-
-Assembly                    MEGAHIT Assembly  SOAPdenovo2 Assembly  ABySS Assembly
-# contigs (>= 0 bp)         2016526           4302510               2118419       
-# contigs (>= 1000 bp)      188829            178561                128235        
-# contigs (>= 5000 bp)      108682            95240                 90825         
-# contigs (>= 10000 bp)     67450             60102                 62645         
-# contigs (>= 25000 bp)     19178             19989                 24430         
-# contigs (>= 50000 bp)     3057              4334                  6212          
-Total length (>= 0 bp)      2556992461        2558046622            2412364772    
-Total length (>= 1000 bp)   2001525914        1919780233            1999634395    
-Total length (>= 5000 bp)   1802063399        1721813040            1889199532    
-Total length (>= 10000 bp)  1502934610        1468244755            1683849457    
-Total length (>= 25000 bp)  739349188         832894057             1068318912    
-Total length (>= 50000 bp)  198556342         299482189             440085929     
-# contigs                   297228            254624                201612        
-Largest contig              165262            250385                299793        
-Total length                2072540175        1972334240            2048669361    
-GC (%)                      43.86             43.53                 43.70         
-N50                         18275             20633                 26214         
-N90                         3816              3886                  6191          
-auN                         23300.9           27698.7               33849.9       
-L50                         33113             26743                 22712         
-L90                         123096            107293                82698         
-# N's per 100 kbp           0.00              4415.14               324.62        
-========================================================================================
-
-----------------------------------------------------files--------------------------------------------
-
-| Assembler   | File to Use                         | Use Case                            |
-| ----------- | ----------------------------------- | ----------------------------------- |
-| MEGAHIT     | `final.contigs.fa`                  | ✅ All evaluations                   |
-| SOAPdenovo2 | `W1-A-soap.scafSeq`                 | ✅ All evaluations                   |
-| ABySS       | `W1-A-scaffolds.fa` (or `.contigs`) | ✅ All evaluations (prefer scaffold) |
-
-=========================================ANI results --------------------------------------------
-| Assembly Tool   | ANI (%)   | Align Fraction (Ref) | Align Fraction (Query) | Interpretation            |
-| --------------- | --------- | -------------------- | ---------------------- | ------------------------- |
-| **ABySS**       | **99.45** | **89.48%**           | **84.86%**             | ✅ Best similarity overall |
-| **MEGAHIT**     | 99.40     | 87.91%               | 85.36%                 | 🟢 Very good              |
-| **SOAPdenovo2** | 99.03     | 78.14%               | 72.21%                 | 🔴 Lowest similarity      |
-
-
-
-
+ 
 ==========================================truth set 
 
  minimap2 -ax asm5 Reference/Reference.fasta Abyss/Normal/W1-A-contigs.fa > minimap2.sam
@@ -292,10 +100,8 @@ bcftools index /home/work/Desktop/variants/denovo_try/minmap/variants_minimap2.v
 
 
 
---------------------------------------End Making Truthset for validation --------------------------
 
-
-## Alignment 
+-------------------------------------- --------------------------## Alignment 
 
 Alignment
 ------------------------------------------------------------
@@ -313,39 +119,16 @@ scripts/commands_alignment.txt.
 
 Mapping quality was evaluated using Samtools flagstat and alignment summary metrics.
 
-
-
-Metric                                   Minimap2        Bowtie2         BWA
--------------------------------------------------------------------------------
-Total Reads (QC-passed)                  879,215,458     877,019,392     880,634,868
-Mapped Reads (%)                         99.45%          99.64%          99.75%
-Properly Paired (%)                      97.63%          69.69%          98.14%
-Singletons (%)                           0.27%           0.15%           0.10%
-Mate Mapped to Different Chr (%)         0.83%           1.54%           1.06%
-Mate Mapped to Diff. Chr (MAPQ >= 5) (%) 0.43%           1.06%           0.58%
+Results/CH-NORMS1_bowtie2_flagstat.txt
+Results/CH-NORMS1_trimmed_bwa_flagstat.txt
+Results/aligned_Normal_minimap2_flagstat.txt
 
 
 
-gatk MarkDuplicates \
-  -I "/media/work/New Volume1/Alignment/FastpAllignment/CH-NORMS1_trimmed_sorted_rg.bam" \
-  -O "/home/work/Desktop/variants/latest_tools_varains_with_reference_file/dedup_allignments/CH-NORMS1.dedup.bam" \
-  -M "/home/work/Desktop/variants/latest_tools_varains_with_reference_file/dedup_allignments/CH-NORMS1.metrics.txt" \
-  --CREATE_INDEX true
+ GATK MarkDuplicates before allignment 
+Scripts and results 
+scripts/GATK_MarkDuplicates_Results_Summary.txt
 
-  GATK MarkDuplicates Results Summary
-====================================
-
-Sample: CH-NORMS1)
---------------------------
-READ_PAIRS_EXAMINED: 436,970,646
-READ_PAIR_DUPLICATES: 37,780,610
-READ_PAIR_OPTICAL_DUPLICATES: 3,774,873 (~10% of duplicate pairs)
-PERCENT_DUPLICATION: 8.67%
-ESTIMATED_LIBRARY_SIZE: 2,612,848,101
-
-Interpretation:
-- Duplication rate is low (under 10%), which is good for downstream variant calling.
-- Library complexity is high (large estimated library size).
 
 
 Variant Calling
@@ -361,7 +144,6 @@ Results
 
 ==============================================================================================================
 Orignal varaints after varaint calling tools 
-
 
 
 Tool          Sample      Total Variants
@@ -394,7 +176,7 @@ AND
 VAF > 0.02)
 
 Command-line parameters for reproducibility are provided in 
-https://github.com/Wasiq54/Chelonia-mydas-variant-benchmark/blob/main/scripts/filter_all_tools.sh
+scripts/filter_all_tools.sh
 
 -----------------------------------------------------------------------------        **   After Filter results **---------------------------------
 
@@ -455,7 +237,7 @@ These rows correspond to “use all variants as they are in the VCF” (no score
 step1: make bed fils for snps and indels
 
 Command
-https://github.com/Wasiq54/Chelonia-mydas-variant-benchmark/blob/main/scripts/make_snp_and_indels_bed.sh
+/scripts/make_snp_and_indels_bed.sh
 
 
 step2: SNP-only overlaps
@@ -470,7 +252,7 @@ Varscan_normal_SNPs.bed
 
 
 Command
-https://github.com/Wasiq54/Chelonia-mydas-variant-benchmark/blob/main/scripts/normal_snp_overlap.sh
+/scripts/normal_snp_overlap.sh
 
 
 
