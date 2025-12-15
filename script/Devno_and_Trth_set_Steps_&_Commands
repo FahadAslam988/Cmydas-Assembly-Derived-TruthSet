@@ -1,0 +1,201 @@
+
+
+
+==============================================================================ABySS version 2.3.6   (abyss_env)==============================================================================
+cd /home/work/Desktop/variants/denovo_try/Abyss/Normal/ && \
+abyss-pe k=96 name=W1-A lib=pe \
+pe="/home/work/Desktop/variants/DataofDNA/CH-NORMS1/W1-A_1_trimmed.fastq.gz /home/work/Desktop/variants/DataofDNA/CH-NORMS1/W1-A_2_trimmed.fastq.gz" \
+j=10 B=600G
+
+============================================================================== soapdenovo2 2.40==============================================================================                             
+
+soapdenovo2 2.40                                     (soapdenovo2_env)
+
+
+
+step1:
+--------------------------------------------------------------------------------------soap_config.txt
+soap_config.txt
+max_rd_len=151
+
+[LIB]
+avg_ins=350
+reverse_seq=0
+asm_flags=3
+rank=1
+q1=/home/work/Desktop/variants/DataofDNA/CH-NORMS1/W1-A_1_trimmed.fastq.gz
+q2=/home/work/Desktop/variants/DataofDNA/CH-NORMS1/W1-A_2_trimmed.fastq.gz
+
+Step2 :
+---------------------------------------------------------------------------------------------------------------
+cd /home/work/Desktop/variants/denovo_try/soapdenovo2/
+
+SOAPdenovo-63mer all \
+  -s soap_config.txt \
+  -K 63 \
+  -o W1-A-soap \
+  -p 30 \
+  -a 450
+
+
+Step3 :
+============================================================================Command============================================================================
+
+(soapdenovo2_env) work@work-Precision-7920-Tower:~/Desktop/variants/denovo_try/soapdenovo2$ SOAPdenovo-63mer all   -s soap_config.txt   -K 63   -o W1-A-soap   -p 30   -a 450
+
+
+
+
+
+============================================================================ MEGAHIT v1.2.9============================================================================
+megahit \
+  -1 /media/beeu/DATA/fahad/TrimData/CH-NORMS1_trim/W1-A_1_trimmed.fastq.gz \
+  -2 /media/beeu/DATA/fahad/TrimData/CH-NORMS1_trim/W1-A_2_trimmed.fastq.gz \
+  -o /media/beeu/DATA/fahad/Denovo/Megahit_Normal \
+  --min-count 2 \
+  --k-min 21 \
+  --k-max 141 \
+  --k-step 12 \
+  -t 40
+
+  ==============================================================================Busco============================================================================
+# ============================================================================
+# BUSCO COMMAND — SOAPdenovo 
+# ============================================================================
+/home/work/miniconda3/envs/basco_env/bin/busco \
+  -i /home/work/Desktop/variants/denovo_try/all_assembly_files/soapdenovo_normal/W1-A-soap.scafSeq \
+  -o soapdenovo_normal_W1-A-soap_busco_results \
+  -m genome \
+  -l sauropsida_odb10 \
+  -c 16 \
+  --out_path /home/work/Desktop/variants/denovo_try/all_assembly_files \
+  --download_path /home/work/busco_downloads \
+  --offline
+
+
+# ================================
+# BUSCO COMMAND — ABySS 
+# ================================
+/home/work/miniconda3/envs/basco_env/bin/busco \
+  -i /home/work/Desktop/variants/denovo_try/all_assembly_files/abyss_normal/W1-A-scaffolds.fa \
+  -o abyss_normal_W1-A-scaffolds_busco_results \
+  -m genome \
+  -l sauropsida_odb10 \
+  -c 16 \
+  --out_path /home/work/Desktop/variants/denovo_try/all_assembly_files \
+  --download_path /home/work/busco_downloads \
+  --offline
+
+
+# ================================
+# BUSCO COMMAND — REFERENCE NCBI (rCheMyd1.pri.v2)
+# ================================
+/home/work/miniconda3/envs/basco_env/bin/busco \
+  -i /home/work/Desktop/variants/denovo_try/all_assembly_files/Reference_ncbi/Reference.fasta \
+  -o Reference_ncbi_Reference_busco_results \
+  -m genome \
+  -l sauropsida_odb10 \
+  -c 16 \
+  --out_path /home/work/Desktop/variants/denovo_try/all_assembly_files \
+  --download_path /home/work/busco_downloads \
+  --offline
+
+# ================================# ================================
+# BUSCO COMMAND — magahit_
+# ================================# ================================
+
+/home/work/miniconda3/envs/basco_env/bin/busco \
+  -i /home/work/Desktop/variants/denovo_try/all_assembly_files/magahit_normal/final.contigs.fa \
+  -o magahit_normal_final.contigs_busco_results \
+  -m genome \
+  -l sauropsida_odb10 \
+  -c 16 \
+  --out_path /home/work/Desktop/variants/denovo_try/all_assembly_files \
+  --download_path /home/work/busco_downloads \
+  --offline
+
+========================================================================================================================================================================================
+==========================================================================ANI Commands ==============================
+
+
+==========================================================================1️⃣ ABySS (Normal) — ANI
+skani dist \
+  -q Reference/Reference.fasta \
+  -r abyss_normal/W1-A-scaffolds.fa \
+  -t 30 \
+  > ani_abyss_normal.txt
+
+==========================================================================2️⃣ MEGAHIT (Normal) — ANI
+skani dist \
+  -q Reference/Reference.fasta \
+  -r magahit_normal/final.contigs.fa \
+  -t 30 \
+  > ani_megahit_normal.txt
+
+==========================================================================3️⃣ SOAPdenovo2 (Normal) — ANI
+
+skani dist \
+  -q Reference/Reference.fasta \
+  -r soapdenovo_normal/W1-A-soap.scafSeq \
+  -t 30 \
+  > ani_soapdenovo_normal.txt
+
+
+========================================================================================================================================================================================
+
+  =================================================================Busco Results ==================
+| Sample (output folder)                           |       C% |   S% |  D% |   F% |   M% |    n |
+| ------------------------------------------------ | -------: | ---: | --: | ---: | ---: | ---: |
+| Reference\_ncbi\_Reference\_busco\_results       | **99.6** | 98.9 | 0.7 |  0.1 |  0.3 | 7480 |
+| abyss\_normal\_W1-A-scaffolds\_busco\_results    | **67.6** | 66.6 | 1.0 | 21.8 | 10.6 | 7480 |
+| **polca\_W1-A-scaffolds\_busco\_results**        | **67.6** | 66.6 | 1.0 | 21.8 | 10.6 | 7480 |
+| soapdenovo\_normal\_W1-A-soap\_busco\_results    |     59.1 | 58.7 | 0.4 | 25.2 | 15.7 | 7480 |
+| magahit\_normal\_final.contigs\_busco\_results   |     56.5 | 56.0 | 0.5 | 28.2 | 15.4 | 7480 |
+
+========================Busco restuls with ANI====
+| Assembly Tool / Run      | BUSCO C% |   F% |   M% |   ANI (%) | Align Fraction (Ref) | Align Fraction (Query) | Interpretation                      |
+| ------------------------ | -------: | ---: | ---: | --------: | -------------------: | ---------------------: | ----------------------------------- |
+| **Reference\_ncbi**      |     99.6 |  0.1 |  0.3 |    100.00 |              100.00% |                100.00% | 🏆 Perfect reference                |
+| **ABySS (Normal)**       |     67.6 | 21.8 | 10.6 | **99.45** |           **89.48%** |             **84.86%** | ✅ Best similarity overall           |
+| **ABySS + Polca polish** |     67.6 | 21.8 | 10.6 | \~99.45\* |           \~89.48%\* |             \~84.86%\* | ➖ No BUSCO change (likely same ANI) |
+| MEGAHIT (Normal)         |     56.5 | 28.2 | 15.4 |     99.40 |               87.91% |                 85.36% | 🟢 Very good                        |
+| SOAPdenovo2 (Normal)     |     59.1 | 25.2 | 15.7 |     99.03 |               78.14% |                 72.21% | 🔴 Lowest similarity                |
+
+
+
+========================================================================================
+
+----------------------------------------------------files--------------------------------------------
+
+| Assembler   | File to Use                         | 
+| ----------- | ----------------------------------- | 
+| MEGAHIT     | `final.contigs.fa`                  |
+| SOAPdenovo2 | `W1-A-soap.scafSeq`                 | 
+| ABySS       | `W1-A-scaffolds.fa` (or `.contigs`) |
+
+=========================================ANI results --------------------------------------------
+| Assembly Tool   | ANI (%)   | Align Fraction (Ref) | Align Fraction (Query) | Interpretation            |
+| --------------- | --------- | -------------------- | ---------------------- | ------------------------- |
+| **ABySS**       | **99.45** | **89.48%**           | **84.86%**             | ✅ Best similarity overall |
+| **MEGAHIT**     | 99.40     | 87.91%               | 85.36%                 | 🟢 Very good              |
+| **SOAPdenovo2** | 99.03     | 78.14%               | 72.21%                 | 🔴 Lowest similarity      |
+
+
+
+
+====================================================================================Truth set Making ==========================================
+
+ minimap2 -ax asm5 Reference/Reference.fasta Abyss/Normal/W1-A-contigs.fa > minimap2.sam
+
+samtools sort -@ 8 -o /home/work/Desktop/variants/denovo_try/minmap/minimap2_sorted.bam /home/work/Desktop/variants/denovo_try/minmap/minimap2.sam
+
+# Step 1: Generate BCF using bcftools mpileup
+bcftools mpileup -f Reference/Reference.fasta /home/work/Desktop/variants/denovo_try/minmap/minimap2_sorted.bam \
+  -Ou | bcftools call -mv -Oz -o /home/work/Desktop/variants/denovo_try/minmap/variants_minimap2.vcf.gz
+
+# Step 2: Index the VCF (recommended)
+bcftools index /home/work/Desktop/variants/denovo_try/minmap/variants_minimap2.vcf.gz
+
+
+
+--------------------------------------End Making Truthset for validation --------------------------
